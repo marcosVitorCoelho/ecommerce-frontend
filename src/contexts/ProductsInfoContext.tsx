@@ -1,3 +1,4 @@
+"use client";
 import { apiBase } from "@/services/api";
 import {
   ReactNode,
@@ -6,16 +7,20 @@ import {
   useCallback,
   useEffect,
 } from "react";
-import { useRouter } from "next/navigation";
 import { GetProductProps } from "@/interfaces/getProductInterface.interface";
 
 type RequestProps = {
   data: GetProductProps[];
 };
 
+type GetProductRequestProps = {
+  data: GetProductProps;
+};
+
 interface ProductsInfoContextType {
   products: GetProductProps[] | undefined;
   isLoading: boolean;
+  getProductInfo: (id: string) => Promise<GetProductRequestProps>;
 }
 
 interface ProductsInfoContextProps {
@@ -50,13 +55,22 @@ const ProductsInfoProvider: React.FC<ProductsInfoContextProps> = ({
     }
   }, []);
 
+  const getProductInfo: (
+    id: string
+  ) => Promise<GetProductRequestProps> = async (id: string) => {
+    const response = await apiBase.get<GetProductRequestProps>(
+      `/product/${id}`
+    );
+    return response;
+  };
+
   useEffect(() => {
     handleGetProducts();
   }, [handleGetProducts]);
 
   return (
     <ProductsInfoContext.Provider
-      value={{ products: products, isLoading: isLoading }}
+      value={{ products: products, isLoading: isLoading, getProductInfo }}
     >
       {children}
     </ProductsInfoContext.Provider>

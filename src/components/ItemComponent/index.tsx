@@ -10,12 +10,12 @@ type ItemComponentProps = {
 };
 
 export default function ItemComponent({ product }: ItemComponentProps) {
-  const { title, price, description, images } = product;
+  const { title, price, description, images, _id } = product;
 
   return (
     <S.ProductContainer>
       <S.ContainerImage>
-        <Link href="/login">
+        <Link href={`/product/${_id}`}>
           {images[0].url && (
             <Image
               alt="ola"

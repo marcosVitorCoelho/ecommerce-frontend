@@ -4,6 +4,7 @@ import * as S from "./style";
 import { Box, FormControl, Grid, InputLabel } from "@mui/material";
 import ItemComponent from "@/components/ItemComponent";
 import ProductsInfoContext from "@/contexts/ProductsInfoContext";
+import Link from "next/link";
 
 export default function Home() {
   const { products, isLoading } = useContext(ProductsInfoContext);
