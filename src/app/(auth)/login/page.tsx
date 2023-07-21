@@ -10,6 +10,7 @@ import UserAuthenticationContext, {
   IFormSignIn,
 } from "@/contexts/UserAuthContext";
 import { useContext } from "react";
+import { checkUserAuth } from "@/utils/checkUserAuth";
 
 const SignInSchema = yup.object().shape({
   email: yup.string().email("Email inválido").required("Preencha seu email"),
@@ -34,39 +35,48 @@ export default function Login() {
   return (
     <S.FormContainer>
       <h1>Login</h1>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={SignInSchema}
-        onSubmit={(values) => {
-          handleSubmit(values);
-        }}
-      >
-        {({ errors, touched }) => (
-          <Form>
-            <S.FormInputContainer>
-              <Field
-                name="email"
-                label="Email"
-                error={touched.email && Boolean(errors.email)}
-                helperText={touched.email && errors.email}
-                component={CustomInput}
-              />
-              <Field
-                name="password"
-                type="password"
-                label="Senha"
-                error={touched.password && Boolean(errors.password)}
-                helperText={touched.password && errors.password}
-                component={CustomInput}
-              />
-              <Button variant="contained" type="submit">
-                Login
-              </Button>
-            </S.FormInputContainer>
-          </Form>
-        )}
-      </Formik>
-      <Link href="/createuser">Crie uma conta</Link>
+      {!checkUserAuth() ? (
+        <>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={SignInSchema}
+            onSubmit={(values) => {
+              handleSubmit(values);
+            }}
+          >
+            {({ errors, touched }) => (
+              <Form>
+                <S.FormInputContainer>
+                  <Field
+                    name="email"
+                    label="Email"
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                    component={CustomInput}
+                  />
+                  <Field
+                    name="password"
+                    type="password"
+                    label="Senha"
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                    component={CustomInput}
+                  />
+                  <Button variant="contained" type="submit">
+                    Login
+                  </Button>
+                </S.FormInputContainer>
+              </Form>
+            )}
+          </Formik>
+          <Link href="/createuser">Crie uma conta</Link>
+        </>
+      ) : (
+        <>
+          <p>Você já está logado</p>
+          <Link href="/">Ir para a Home</Link>
+        </>
+      )}
     </S.FormContainer>
   );
 }

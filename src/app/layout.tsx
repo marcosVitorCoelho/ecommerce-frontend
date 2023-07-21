@@ -10,7 +10,9 @@ import PrivateRoute from "@/components/PrivateRoute";
 import * as S from "./style";
 import { UserAuthenticationProvider } from "@/contexts/UserAuthContext";
 import NavBar from "@/components/NavBar";
+import App_Routes from "@/constants/RoutesConstants";
 import { ProductsInfoProvider } from "@/contexts/ProductsInfoContext";
+import { CartProvider } from "@/contexts/CartContext";
 
 const cabin = Cabin({ subsets: ["latin"] });
 
@@ -33,15 +35,17 @@ export default function RootLayout({
       <GlobalStyle />
       <StyledComponentsRegistry>
         <UserAuthenticationProvider>
-          <ProductsInfoProvider>
-            <body className={cabin.className}>
-              <NavBar />
-              <S.MainTag>
-                {isPublicRoute && children}
-                {!isPublicRoute && <PrivateRoute>{children}</PrivateRoute>}
-              </S.MainTag>
-            </body>
-          </ProductsInfoProvider>
+          <CartProvider>
+            <ProductsInfoProvider>
+              <body className={cabin.className}>
+                <NavBar />
+                <S.MainTag>
+                  {isPublicRoute && children}
+                  {!isPublicRoute && <PrivateRoute>{children}</PrivateRoute>}
+                </S.MainTag>
+              </body>
+            </ProductsInfoProvider>
+          </CartProvider>
         </UserAuthenticationProvider>
       </StyledComponentsRegistry>
     </html>

@@ -3,13 +3,14 @@ import { apiBase } from "@/services/api";
 import { ReactNode, createContext } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "universal-cookie";
+import { checkUserAuth } from "@/utils/checkUserAuth";
 
 interface UserAuthentcationContextType {
   createUser: (values: IFormSignUp) => void;
   authUser: (
     values: IFormSignIn
   ) => Promise<{ firstName: string; token: string } | undefined>;
-  logoff: () => void;
+  handleSessionUser: () => void;
 }
 
 interface UserAuthentcationContextProps {
@@ -53,6 +54,7 @@ const UserAuthenticationProvider: React.FC<UserAuthentcationContextProps> = ({
       push("/");
       return data;
     } catch (error) {
+      alert("Credenciais inválidas");
       console.warn(error);
     }
   };
@@ -60,26 +62,29 @@ const UserAuthenticationProvider: React.FC<UserAuthentcationContextProps> = ({
   const createUser = async (values: IFormSignUp) => {
     try {
       const data = await apiBase.post("/user/register", values);
-      push("/login");
       console.log(data);
+      push("/login");
     } catch (error) {
       console.error(error);
     }
   };
 
-  const logoff = async () => {
+  const handleSessionUser = async () => {
     try {
-      const data = await apiBase.get("/user/logout");
-      push("/login");
-      console.log(data);
+      if (checkUserAuth()) {
+        const data = await apiBase.get("/user/logout");
+        console.log(data);
+      }
     } catch (error) {
       console.error(error);
+    } finally {
+      push("/login");
     }
   };
 
   return (
     <UserAuthenticationContext.Provider
-      value={{ createUser, authUser, logoff }}
+      value={{ createUser, authUser, handleSessionUser }}
     >
       {children}
     </UserAuthenticationContext.Provider>

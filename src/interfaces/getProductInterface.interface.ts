@@ -1,4 +1,4 @@
-export interface GetProductProps {
+export interface ProductProps {
   _id: string;
   title: string;
   slug: string;
@@ -7,6 +7,7 @@ export interface GetProductProps {
   category: Category;
   brand: string;
   quantity: number;
+  quantityInCart: number;
   images: Image[];
   sold: number;
   totalrating: string;

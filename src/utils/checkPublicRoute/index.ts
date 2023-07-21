@@ -7,5 +7,5 @@ import App_Routes from "@/constants/RoutesConstants";
 
 export const checkPublicRoute = (asPath: string) => {
   const appPublicRoutes = Object.values(App_Routes.PUBLIC);
-  return appPublicRoutes.includes(asPath);
+  return appPublicRoutes.includes(asPath) || asPath.includes("product");
 };

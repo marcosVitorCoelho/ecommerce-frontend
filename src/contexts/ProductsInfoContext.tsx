@@ -7,18 +7,18 @@ import {
   useCallback,
   useEffect,
 } from "react";
-import { GetProductProps } from "@/interfaces/getProductInterface.interface";
+import { ProductProps } from "@/interfaces/getProductInterface.interface";
 
 type RequestProps = {
-  data: GetProductProps[];
+  data: ProductProps[];
 };
 
 type GetProductRequestProps = {
-  data: GetProductProps;
+  data: ProductProps;
 };
 
 interface ProductsInfoContextType {
-  products: GetProductProps[] | undefined;
+  products: ProductProps[] | undefined;
   isLoading: boolean;
   getProductInfo: (id: string) => Promise<GetProductRequestProps>;
 }
@@ -32,7 +32,7 @@ const ProductsInfoContext = createContext({} as ProductsInfoContextType);
 const ProductsInfoProvider: React.FC<ProductsInfoContextProps> = ({
   children,
 }) => {
-  const [products, setProducts] = useState<GetProductProps[] | undefined>([]);
+  const [products, setProducts] = useState<ProductProps[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getProducts: () => Promise<RequestProps> = async () => {

@@ -1,10 +1,10 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import * as S from "./style";
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
+import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import WindowIcon from "@mui/icons-material/Window";
@@ -17,7 +17,11 @@ import Image from "next/image";
 import Logo from "@/assets/Logo.svg";
 import { usePathname } from "next/navigation";
 import LogoutIcon from "@/assets/LogoutIcon.svg";
+import Bag from "@/assets/Bag.svg";
 import UserAuthenticationContext from "@/contexts/UserAuthContext";
+import { checkUserAuth } from "@/utils/checkUserAuth";
+import Badge from "@mui/material/Badge";
+import CartContext from "@/contexts/CartContext";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -27,7 +31,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function MiniDrawer() {
-  const { logoff } = useContext(UserAuthenticationContext);
+  const { handleSessionUser } = useContext(UserAuthenticationContext);
+  const { cartItems } = useContext(CartContext);
+  const [totalItems, setTotalItems] = useState(0);
   const [open, setOpen] = useState(false);
 
   const pathName = usePathname();
@@ -35,6 +41,15 @@ export default function MiniDrawer() {
   const handleDrawerOpen = () => {
     setOpen((prev) => !prev);
   };
+
+  const getTotalItems = useCallback(() => {
+    return cartItems.reduce((total, item) => total + item.quantityInCart, 0);
+  }, [cartItems]);
+
+  useEffect(() => {
+    setTotalItems(getTotalItems());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getTotalItems]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -59,11 +74,95 @@ export default function MiniDrawer() {
           </ListItem>
         </DrawerHeader>
         <Divider />
-        <List>
+        <S.CustomList>
+          <div>
+            <ListItem
+              disablePadding
+              sx={{ display: "block" }}
+              onClick={handleDrawerOpen}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <MenuIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Menu"} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+            <Link href={"/"}>
+              <ListItem disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                  selected={pathName === "/"}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <WindowIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Home"}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+            <Link href={"/cart"}>
+              <ListItem disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                  selected={pathName === "/cart"}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Badge
+                      badgeContent={totalItems}
+                      color="primary"
+                      invisible={totalItems > 0 ? false : true}
+                    >
+                      <Image src={Bag} alt="Bag icon" />
+                    </Badge>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Bag"}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          </div>
           <ListItem
             disablePadding
             sx={{ display: "block" }}
-            onClick={handleDrawerOpen}
+            onClick={handleSessionUser}
           >
             <ListItemButton
               sx={{
@@ -79,57 +178,19 @@ export default function MiniDrawer() {
                   justifyContent: "center",
                 }}
               >
-                <MenuIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Menu"} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-              selected={pathName === "/"}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <Link href={"/"}>
-                  <WindowIcon />
-                </Link>
-              </ListItemIcon>
-              <ListItemText primary={"Home"} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }} onClick={logoff}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <Link href={"/"}>
+                {checkUserAuth() ? (
                   <Image src={LogoutIcon} alt="logout icon" />
-                </Link>
+                ) : (
+                  <LoginRoundedIcon />
+                )}
               </ListItemIcon>
-              <ListItemText primary={"Sair"} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText
+                primary={checkUserAuth() ? "Logout" : "Login"}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
             </ListItemButton>
           </ListItem>
-        </List>
+        </S.CustomList>
       </S.Drawer>
     </Box>
   );

@@ -3,13 +3,16 @@ import Image from "next/image";
 import * as S from "./style";
 import AddCart from "@/assets/AddCart.svg";
 import Link from "next/link";
-import { GetProductProps } from "@/interfaces/getProductInterface.interface";
+import { ProductProps } from "@/interfaces/getProductInterface.interface";
+import { useContext } from "react";
+import CartContext from "@/contexts/CartContext";
 
 type ItemComponentProps = {
-  product: GetProductProps;
+  product: ProductProps;
 };
 
 export default function ItemComponent({ product }: ItemComponentProps) {
+  const { handleAddToCart } = useContext(CartContext);
   const { title, price, description, images, _id } = product;
 
   return (
@@ -31,7 +34,7 @@ export default function ItemComponent({ product }: ItemComponentProps) {
         <p>{description}</p>
         <div>
           <span>${price}</span>
-          <button>
+          <button onClick={() => handleAddToCart(product)}>
             <Image alt="adiconar ao carrinho" src={AddCart} />
           </button>
         </div>

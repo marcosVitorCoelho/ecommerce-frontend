@@ -1,7 +1,16 @@
 "use client";
 
 import { styled as styledMUI, Theme, CSSObject } from "@mui/material/styles";
+import styled from "styled-components";
 import MuiDrawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+
+export const CustomList = styled(List)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: 200,

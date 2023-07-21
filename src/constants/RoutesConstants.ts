@@ -4,9 +4,9 @@ export default abstract class App_Routes {
     login: "/login",
     register: "/createuser",
     forgotPassword: "/forgotpassword",
-    products: "/products",
     category: "/category",
     brand: "/brand",
+    tbjn: "/tbjn",
   };
 
   static readonly PRIVATE = {
