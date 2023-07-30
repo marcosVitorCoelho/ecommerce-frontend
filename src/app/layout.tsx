@@ -1,5 +1,3 @@
-"use client";
-
 import StyledComponentsRegistry from "@/lib/registry";
 import { CssBaseline } from "@mui/material";
 import { GlobalStyle } from "@/style/GlobalStyle";
