@@ -1,3 +1,5 @@
+"use client"
+
 import { ReactNode, createContext, useReducer } from "react";
 import { cartReducer, initialState } from "@/reducers/cart/reducer";
 import { ProductProps } from "@/interfaces/getProductInterface.interface";
