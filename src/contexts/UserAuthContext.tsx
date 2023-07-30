@@ -1,3 +1,4 @@
+"use client"
 import SessionConstants from "@/constants/SessionConstants";
 import { apiBase } from "@/services/api";
 import { ReactNode, createContext } from "react";
