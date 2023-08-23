@@ -70,7 +70,7 @@ export default function Product() {
                   dolores voluptas iure itaque. Fugiat, harum consectetur.
                 </p>
                 <S.ButtonCartContainer>
-                  <button>
+                  <button onClick={() => handleAddToCart(productInfo)}>
                     <Image alt="adiconar ao carrinho" src={AddCart} />
                   </button>
                 </S.ButtonCartContainer>

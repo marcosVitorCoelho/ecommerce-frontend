@@ -7,9 +7,7 @@ import { Button } from "@mui/material";
 import * as S from "../style";
 import Link from "next/link";
 import { useContext } from "react";
-import UserAuthenticationContext, {
-  IFormSignUp,
-} from "@/contexts/UserAuthContext";
+import UserAuthenticationContext from "@/contexts/UserAuthContext";
 
 const SignInSchema = yup.object().shape({
   email: yup.string().email("Email inválido").required("Preencha seu email"),
@@ -38,10 +36,12 @@ const SignInSchema = yup.object().shape({
     ),
 });
 
+type userCreationSchema = yup.InferType<typeof SignInSchema>
+
 export default function CreateUser() {
   const { createUser } = useContext(UserAuthenticationContext);
 
-  const handleSubmit = async (values: IFormSignUp) => {
+  const handleSubmit = async (values: userCreationSchema) => {
     try {
       createUser(values);
     } catch (error) {
@@ -49,7 +49,7 @@ export default function CreateUser() {
     }
   };
 
-  const initialValues: IFormSignUp = {
+  const initialValues: userCreationSchema = {
     firstName: "",
     lastName: "",
     email: "",
@@ -59,7 +59,7 @@ export default function CreateUser() {
 
   return (
     <S.FormContainer usersignup={true}>
-      <h1>Crie sua conta!</h1>
+      <h1>Create Your Account!</h1>
       <Formik
         initialValues={initialValues}
         validationSchema={SignInSchema}
@@ -72,14 +72,14 @@ export default function CreateUser() {
             <S.FormInputContainer>
               <Field
                 name="firstName"
-                label="Nome"
+                label="Name"
                 error={touched.firstName && Boolean(errors.firstName)}
                 helperText={touched.firstName && errors.firstName}
                 component={CustomInput}
               />
               <Field
                 name="lastName"
-                label="Sobrenome"
+                label="Last Name"
                 error={touched.lastName && Boolean(errors.lastName)}
                 helperText={touched.lastName && errors.lastName}
                 component={CustomInput}
@@ -93,7 +93,7 @@ export default function CreateUser() {
               />
               <Field
                 name="password"
-                label="Senha"
+                label="Password"
                 type="password"
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
@@ -101,7 +101,7 @@ export default function CreateUser() {
               />
               <Field
                 name="confirmPassword"
-                label="Confirme sua senha"
+                label="Confirm your password"
                 type="password"
                 error={
                   touched.confirmPassword && Boolean(errors.confirmPassword)
@@ -110,13 +110,13 @@ export default function CreateUser() {
                 component={CustomInput}
               />
               <Button variant="contained" type="submit">
-                Cadastrar
+                Create Account
               </Button>
             </S.FormInputContainer>
           </Form>
         )}
       </Formik>
-      <Link href="/login">Já possui uma conta? Faça login</Link>
+      <Link href="/login">Have an account already? Login</Link>
     </S.FormContainer>
   );
 }

@@ -6,9 +6,7 @@ import CustomInput from "@/components/Input";
 import { Button } from "@mui/material";
 import * as S from "../style";
 import Link from "next/link";
-import UserAuthenticationContext, {
-  IFormSignIn,
-} from "@/contexts/UserAuthContext";
+import UserAuthenticationContext from "@/contexts/UserAuthContext";
 import { useContext } from "react";
 import { checkUserAuth } from "@/utils/checkUserAuth";
 
@@ -17,9 +15,11 @@ const SignInSchema = yup.object().shape({
   password: yup.string().required("Digite sua senha"),
 });
 
+type userLoginSchema = yup.InferType<typeof SignInSchema>
+
 export default function Login() {
   const { authUser } = useContext(UserAuthenticationContext);
-  const handleSubmit = async (values: IFormSignIn) => {
+  const handleSubmit = async (values: userLoginSchema) => {
     try {
       authUser(values);
     } catch (error) {
@@ -27,10 +27,12 @@ export default function Login() {
     }
   };
 
-  const initialValues: IFormSignIn = {
+  const initialValues: userLoginSchema = {
     email: "",
     password: "",
   };
+
+  
 
   return (
     <S.FormContainer>
@@ -57,7 +59,7 @@ export default function Login() {
                   <Field
                     name="password"
                     type="password"
-                    label="Senha"
+                    label="Password"
                     error={touched.password && Boolean(errors.password)}
                     helperText={touched.password && errors.password}
                     component={CustomInput}
